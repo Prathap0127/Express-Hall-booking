@@ -77,7 +77,6 @@ app.post("/room-booking", (req, res) => {
           endDate: req.body.endDate,
           roomId: req.body.roomId,
           bookedStatus: true,
-          bookingId: bookingId + 1,
         };
         let customerObj = {
           customerName: req.body.customerName,
@@ -128,9 +127,11 @@ app.get("/customers", (req, res) => {
 
 app.get("/customer-booking", (req, res) => {
   let bookedRooms = [];
-  customers.map((c) => {
-    let booking = bookRoom.filter((e) => e.customerName === c);
-    customers.map((b) => {
+  customers.map((customer) => {
+    let booking = bookRoom.filter(
+      (e) => e.customerName === customer.customerName
+    );
+    booking.forEach((b) => {
       bookedRooms.push({
         roomID: b.roomId,
         Date: b.date,
@@ -138,15 +139,15 @@ app.get("/customer-booking", (req, res) => {
         enddate: b.endTime,
       });
     });
-    bookedRooms.push({
-      customerName: c,
+    customerBooking.push({
+      customerName: customer.customerName,
       BookingDetails: booking,
     });
   });
   res.status(200).send({
     status: true,
     message: "Room booked details!",
-    bookedRooms,
+    customerBooking,
   });
 });
 
