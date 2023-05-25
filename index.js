@@ -9,7 +9,13 @@ let customers = [];
 let customerBooking = [];
 
 app.get("/", (req, res) => {
-  res.send(`<h1>Welcome to Hotel Booking App</h1>`);
+  res.send(`<h1>Welcome to Hotel Booking App</h1>
+  <p>POST: /create-room</p>
+  <p>GET: /room</p>
+  <p>POST: /room-booking</p>
+  <p>GET: /booked-room</p>
+  <p>GET: /customer-booking</p>
+  `);
 });
 
 app.get("/room", (req, res) => {
