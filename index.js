@@ -26,25 +26,34 @@ app.get("/room", (req, res) => {
 //create a room with attributes
 app.post("/create-room", (req, res) => {
   try {
-    let id = req.body.id;
-    let roomName = req.body.roomName;
-    let noOfSeatAvailable = parseInt(req.body.noOfSeatAvailable);
-    let amenitiesInRoom = req.body.amenitiesInRoom;
-    let pricePerhour = req.body.pricePerhour;
-    let roomObj = {
-      id,
-      roomName,
-      noOfSeatAvailable,
-      amenitiesInRoom,
-      pricePerhour,
-      bookedStatus: false,
-    };
-    room.push(roomObj);
-    console.log(room);
-    res.status(200).json({
-      message: "Room Created Sucessfully",
-      roomObj: roomObj,
+    let exRoom = room.filter((r) => {
+      return r.id === req.body.id;
     });
+    if (exRoom.length) {
+      res.status(200).send({
+        message: "Room ID Already exist",
+      });
+    } else {
+      let id = req.body.id;
+      let roomName = req.body.roomName;
+      let noOfSeatAvailable = parseInt(req.body.noOfSeatAvailable);
+      let amenitiesInRoom = req.body.amenitiesInRoom;
+      let pricePerhour = req.body.pricePerhour;
+      let roomObj = {
+        id,
+        roomName,
+        noOfSeatAvailable,
+        amenitiesInRoom,
+        pricePerhour,
+        bookedStatus: false,
+      };
+      room.push(roomObj);
+      console.log(room);
+      res.status(200).json({
+        message: "Room Created Sucessfully",
+        roomObj: roomObj,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
