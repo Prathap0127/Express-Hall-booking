@@ -6,6 +6,7 @@ const port = 8000;
 let room = [];
 let bookRoom = [];
 let customers = [];
+let customerBooking = [];
 
 app.get("/", (req, res) => {
   res.send(`<h1>Welcome to Hotel Booking App</h1>`);
@@ -54,7 +55,8 @@ app.post("/room-booking", (req, res) => {
   let bookingStaus = bookRoom.filter((booking) => {
     return (
       booking.startDate == req.body.startDate &&
-      booking.endDate == req.body.endDate
+      booking.endDate == req.body.endDate &&
+      booking.roomId == req.body.roomId
     );
   });
   if (bookingStaus.length) {
@@ -64,6 +66,8 @@ app.post("/room-booking", (req, res) => {
     });
   } else {
     for (let i = 0; i < room.length; i++) {
+      let bookingId = 001;
+
       if (req.body.roomId === room[i].id && room[i].noOfSeatAvailable > 0) {
         let roombookObj = {
           customerName: req.body.customerName,
@@ -73,6 +77,7 @@ app.post("/room-booking", (req, res) => {
           endDate: req.body.endDate,
           roomId: req.body.roomId,
           bookedStatus: true,
+          bookingId: bookingId + 1,
         };
         let customerObj = {
           customerName: req.body.customerName,
@@ -117,6 +122,32 @@ app.get("/booked-room", (req, res) => {
 
 app.get("/customers", (req, res) => {
   res.status(200).send(customers);
+});
+
+//custome Booking Detials
+
+app.get("/customer-booking", (req, res) => {
+  let bookedRooms = [];
+  customers.map((c) => {
+    let booking = bookRoom.filter((e) => e.customerName === c);
+    customers.map((b) => {
+      bookedRooms.push({
+        roomID: b.roomId,
+        Date: b.date,
+        startDate: b.startTime,
+        enddate: b.endTime,
+      });
+    });
+    bookedRooms.push({
+      customerName: c,
+      BookingDetails: booking,
+    });
+  });
+  res.status(200).send({
+    status: true,
+    message: "Room booked details!",
+    bookedRooms,
+  });
 });
 
 app.listen(port, () => {
